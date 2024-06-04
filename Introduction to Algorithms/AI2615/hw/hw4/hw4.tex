@@ -1,0 +1,166 @@
+%Example of use of oxmathproblems latex class for problem sheets
+\documentclass{oxmathproblems}
+
+%(un)comment this line to enable/disable output of any solutions in the file
+%\printanswers
+
+%define the page header/title info
+\course{Algorithm Design and Analysis}
+\sheettitle{Assignment 4 \\ Deadline: May 26, 2024} %can leave out if no title per sheet
+
+
+\begin{document}
+
+\begin{questions}
+\miquestion[25]
+Design a polynomial time algorithm to find the longest palindrome that is a subsequence of a given input string.
+Please refer to the last slide of Lecture~11 for the definition of palindrome.
+
+Answer:
+
+Here I outline the dynamic programming approach to find the longest palindrome subsequence in a given input string and return the starting and ending indices of the palindrome. Here's how I do it:
+
+1. \textbf{Define the Problem:} Given a string $s$ of length $n$, we want to find the longest palindrome subsequence in $s$ and return its starting and ending indices.
+
+2. \textbf{Dynamic Programming Approach:}
+
+   - Define a 2D array $dp$ of size $n \times n$ where $dp[i][j]$ represents the length of the longest palindrome subsequence in the substring $s[i:j]$. Initially, all elements of $dp$ are zero.
+   
+   - Initialize the diagonal elements of $dp$ as 1, because a single character is always a palindrome of length 1.
+   
+   - Start filling the $dp$ array diagonally, from bottom-left to top-right.
+   
+   - At each cell $(i, j)$ in the matrix, if $s[i]$ equals $s[j]$, then $dp[i][j] = dp[i+1][j-1] + 2$, because the characters $s[i]$ and $s[j]$ contribute to the length of the palindrome.
+   
+   - If $s[i]$ is not equal to $s[j]$, then $dp[i][j]$ will be the maximum of $dp[i+1][j]$ and $dp[i][j-1]$, because we need to check both substrings excluding either $s[i]$ or $s[j]$.
+   
+   - Keep track of the maximum length found and the corresponding starting and ending indices of the palindrome.
+   
+3. \textbf{Constructing the Palindrome:}
+
+   Once we have computed the $dp$ array, we can backtrack to construct the longest palindrome subsequence.Start from the top-left corner of the $dp$ array and follow the decisions made during the DP process to reconstruct the palindrome characters.
+
+4. \textbf{Implementation:}
+
+   Implement the above steps in code. The time complexity of this algorithm is $O(n^2)$, where $n$ is the length of the input string.
+
+This algorithm efficiently finds the longest palindrome subsequence and returns its starting and ending indices in polynomial time using dynamic programming.
+
+\miquestion[25]
+In the class, we have seen a dynamic programming algorithm for computing the edit distance between strings of length $m$ and $n$ creates a table of size $n\times m$ and therefore needs $O(mn)$ space.
+Show how we can reduce it to linear space.
+
+Answer:
+
+To reduce the space complexity of the dynamic programming algorithm for computing the edit distance between two strings to linear space, we can use a technique known as "rolling array" or "sliding array." 
+
+Here's how it works:
+
+1. Instead of storing the entire matrix of size $n \times m$, we only store two rows at a time.
+
+2. We initialize an array of size $n+1$ to store the current row of the matrix, and another array of size $n+1$ to store the previous row.
+
+3. We iterate through the characters of the strings, updating the current row based on the values of the previous row.
+
+By using only two rows of size $n+1$, we reduce the space complexity to $O(n)$, while still being able to compute the edit distance between the two strings. This is because at each step, we only need the information from the previous row to compute the current row, so we can discard the previous rows once they are no longer needed.
+
+\miquestion[25]
+Two strings $x=x_1x_2\cdots x_n$ and $y=y_1y_2\cdots y_m$ are given as inputs.
+\begin{parts}
+    \part Design an $O(mn)$ time algorithm that decides the length of the \emph{longest common substring}, i.e., the largest $k$ for which there are indices $i$ and $j$ with $x_ix_{i+1}\cdots x_{i+k-1}=y_jy_{j+1}\cdots y_{j+k-1}$.
+    \part Design an $O(mn)$ time algorithm that decides the length of the \emph{longest common subsequence}, i.e., the largest $k$ for which there are indices $i_1<i_2<\cdots<i_k$ and $j_1<j_2<\cdots<j_k$ with $x_{i_1}x_{i_2}\cdots x_{i_k}=y_{j_1}y_{j_2}\cdots y_{j_k}$.
+\end{parts}
+
+Answer:
+
+\textbf{Part (a): Longest Common Substring}
+
+1. Define a 2D array \(dp\) where \(dp[i][j]\) represents the length of the longest common suffix of the substrings \(x[1:i]\) and \(y[1:j]\).
+
+2. Initialize \(dp[i][j] = 0\) for all \(i\) and \(j\).
+
+3. Iterate over the characters of \(x\) and \(y\). For each pair \((i, j)\):
+
+   - If \(x[i] = y[j]\), set \(dp[i][j] = dp[i-1][j-1] + 1\).
+   
+   - Otherwise, set \(dp[i][j] = 0\).
+   
+4. Track the maximum value in the \(dp\) table, which will be the length of the longest common substring.
+\newpage
+\textbf{Part (b): Longest Common Subsequence}
+
+1. Define a 2D array \(dp\) where \(dp[i][j]\) represents the length of the longest common subsequence of the substrings \(x[1:i]\) and \(y[1:j]\).
+
+2. Initialize \(dp[i][j] = 0\) for all \(i\) and \(j\).
+
+3. Iterate over the characters of \(x\) and \(y\). For each pair \((i, j)\):
+
+   - If \(x[i] = y[j]\), set \(dp[i][j] = dp[i-1][j-1] + 1\).
+   
+   - Otherwise, set \(dp[i][j] = \max(dp[i-1][j], dp[i][j-1])\).
+   
+4. The value \(dp[n][m]\) will be the length of the longest common subsequence.
+
+
+In summary, both the longest common substring and the longest common subsequence can be efficiently computed using dynamic programming in \(O(mn)\) time. The key is to construct a DP table that records the necessary subproblem solutions and then use those to build up to the final answer.
+
+\miquestion[25]
+In the \emph{subset-sum problem}, you are given a set $T=\{a_1,\ldots,a_n\}$ of $n$ positive integers and a positive integer $k$ as inputs, and you are to decide if there is a subset $S$ with sum exactly $k$. Notice that a set in this problem may contain multiple copies of an integer.
+\begin{parts}
+    \part Design an $O(kn)$ time algorithm for this problem. Note: This is not a polynomial time algorithm. In fact, as I remarked in the class, the subset-sum problem is a well-known NP-complete problem that we do not believe to be solvable in polynomial time.
+    \part Suppose now you are guaranteed that there exists a subset $S$ with sum exactly $k$ and you are given an extra input parameter $\varepsilon>0$. Design an algorithm to find a subset $S'$ such that
+    $$\sum_{a_i\in S'}a_i\in\left[(1-\varepsilon)k,(1+\varepsilon)k\right].$$
+    Your algorithm's running time should be polynomial in terms of $1/\varepsilon$ and $n$.
+    Prove the correctness of your algorithm, and analyze its running time.
+\end{parts}
+
+Answer:
+
+\textbf{Part (a): \( O(kn) \) Time Algorithm for Subset-Sum Problem}
+
+1. Create a 1D array $dp$ of size \(k+1\), where $dp[j]$ will be True if a subset with sum $j$ can be formed using the elements in the set \(T\), and False otherwise.
+
+2. Initialize $dp[0]$ to True because a sum of 0 can always be achieved with an empty subset.
+\newpage
+3. For each element \(a_i\) in \(T\):
+
+   - Update the $dp$ array from the back (from \(k\) down to \(a_i\)) to avoid recomputation errors. 
+   
+   - For each \(j\) from \(k\) to \(a_i\), set $dp[j]$ to $dp[j]$ OR $dp[j - a_i]$.
+   
+4. Check the value of $dp[k]$ to determine if a subset with sum exactly \(k\) exists.
+
+\textbf{Part (b): Approximate Subset-Sum within \((1 \pm \varepsilon)k\)}
+
+Given the guarantee that there exists a subset \(S\) with sum exactly \(k\) and an extra parameter \(\varepsilon > 0\), we aim to find a subset \(S'\) such that:
+\[ \sum_{a_i \in S'} a_i \in [(1 - \varepsilon)k, (1 + \varepsilon)k] \]
+
+1. \textbf{Scale down the problem:} Since \(\varepsilon > 0\), we scale the input numbers to reduce the problem size.
+Define a scaled value \( a_i' = \left\lfloor \frac{a_i}{\delta} \right\rfloor \) where \(\delta = \frac{\varepsilon k}{2n}\).
+   
+2. \textbf{Use Dynamic Programming on Scaled Values:} Apply dynamic programming on the scaled values to approximate the subset-sum.
+Use a dynamic programming array $dp$ to keep track of achievable sums with the scaled values.
+
+3. \textbf{Translate back to the original problem domain:} Once we find a subset \(S'\) with the desired scaled sum, translate it back to the original problem space to ensure the sum is within the desired range.
+
+\textbf{Correctness and Time Complexity:}
+
+- Correctness: By scaling down the problem, we reduce the resolution but maintain the relative proportions. The dynamic programming approach ensures that we explore all possible sums of the scaled values. Scaling back up ensures the result falls within the desired range.
+
+- Time Complexity: The time complexity is \(O(n^2 / \varepsilon)\) because the size of the dynamic programming table is \(O(n / \varepsilon)\) and each element of \(T\) contributes \(O(n / \varepsilon)\) operations.
+
+Thus, the algorithm runs in polynomial time with respect to \(n\) and \(1/\varepsilon\).
+
+  
+\miquestion
+How long does it take you to finish the assignment (including thinking and discussion)?
+Give a score (1,2,3,4,5) to the difficulty.
+Do you have any collaborators?
+Please write down their names here.
+ 
+It takes me 4 hours to finish this assignment.I
+would give 3 to the difficulty because the questions are mostly classic cases in dynamic programming algorithm whose ideas are similar to those in class.
+\end{questions}
+
+
+\end{document}
